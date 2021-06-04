@@ -1,12 +1,14 @@
 import axios, { AxiosResponse } from "axios"
+import {Context} from "@azure/functions";
 
-export const getInformation = (): Promise<string> => {
-    console.log("will fetch switch information from juniper switch");
+export const getInformation = (context: Context): Promise<string> => {
+    context.log("will fetch switch information from juniper switch");
+    context.log("WEBSITE_PRIVATE_IP: " + process.env["WEBSITE_PRIVATE_IP"]);
 
     return axios({
         method: 'post',
-        url: 'http://20.48.53.153:3030/rpc',
-        data: '<get-software-information/><get-interface-information/>',
+        url: 'http://10.0.3.10:3030/rpc',
+        data: '<get-configuration/>',
         headers: {
             'Content-Type': 'application/xml',
             'Accept': 'application/json'
@@ -16,18 +18,18 @@ export const getInformation = (): Promise<string> => {
             password: 'applepen1'
         },
     }).then((response: AxiosResponse)  => {
-        console.log("fetched switch information from juniper switch");
-        console.log(response.data);
+        context.log("fetched switch information from juniper switch");
+        context.log(response.data);
         return response.data;
     });
 };
 
-export const setSOConfiguration = (): Promise<void> => {
-    console.log("will set Service Order Config into juniper switch");
+export const setSOConfiguration = (context: Context): Promise<void> => {
+    context.log("will set Service Order Config into juniper switch");
 
     return axios({
         method: 'post',
-        url: 'http://20.48.53.153:3030/rpc',
+        url: 'http://10.0.3.10:3030/rpc',
         data: `
 <edit-config>
   <target>
@@ -123,13 +125,13 @@ export const setSOConfiguration = (): Promise<void> => {
             password: 'applepen1'
         },
     }).then((response: AxiosResponse)  => {
-        console.log("setting Service Order Config into juniper switch is success: " + response.status);
-        console.log(response.data);
+        context.log("setting Service Order Config into juniper switch is success: " + response.status);
+        context.log(response.data);
 
-        console.log("will send commit command");
+        context.log("will send commit command");
         return axios({
             method: 'post',
-            url: 'http://20.48.53.153:3030/rpc',
+            url: 'http://10.0.3.10:3030/rpc',
             data: '<commit/>',
             headers: {
                 'Content-Type': 'application/xml',
@@ -141,8 +143,8 @@ export const setSOConfiguration = (): Promise<void> => {
             },
         });
     }).then((response: AxiosResponse)  => {
-        console.log("committing is success: " + response.status);
-        console.log(response.data);
+        context.log("committing is success: " + response.status);
+        context.log(response.data);
         return
     });
 };

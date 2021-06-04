@@ -1,12 +1,13 @@
 import axios, { AxiosResponse } from "axios"
+import {Context} from "@azure/functions";
 
-export const getInformation = (): Promise<string> => {
-    console.log("will fetch switch information from arista switch");
+export const getInformation = (context: Context): Promise<string> => {
+    context.log("will fetch switch information from arista switch");
 
     return axios({
         method: 'post',
-        url: 'http://20.48.115.205/command-api',
-        data: '{"jsonrpc": "2.0","method": "runCmds","params": {"version": 1,"cmds":["show version"]},"id":1}',
+        url: 'http://10.0.0.4/command-api',
+        data: '{"jsonrpc": "2.0","method": "runCmds","params": {"version": 1,"cmds":["enable", "show running-config"]},"id":1}',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -16,14 +17,14 @@ export const getInformation = (): Promise<string> => {
             password: 'applepen1'
         },
     }).then((response: AxiosResponse)  => {
-        console.log("fetched switch information from arista switch");
-        console.log(response.data);
+        context.log("fetched switch information from arista switch");
+        context.log(response.data);
         return response.data;
     });
 };
 
-export const setSOConfiguration = (): Promise<string> => {
-    console.log("will set Service Order Config into juniper switch");
+export const setSOConfiguration = (context: Context): Promise<string> => {
+    context.log("will set Service Order Config into juniper switch");
 
     const cmds: string[] = [
         "enable",
@@ -40,7 +41,7 @@ export const setSOConfiguration = (): Promise<string> => {
 
     return axios({
         method: 'post',
-        url: 'http://20.48.115.205/command-api',
+        url: 'http://10.0.0.4/command-api',
         data: `{"jsonrpc": "2.0","method": "runCmds","params": {"version": 1,"cmds":${JSON.stringify(cmds)}},"id":1}`,
         headers: {
             'Content-Type': 'application/json',
@@ -51,8 +52,8 @@ export const setSOConfiguration = (): Promise<string> => {
             password: 'applepen1'
         },
     }).then((response: AxiosResponse)  => {
-        console.log("set Service Order Config into juniper switch");
-        console.log(response.data);
+        context.log("set Service Order Config into juniper switch");
+        context.log(response.data);
         return response.data;
     });
 };

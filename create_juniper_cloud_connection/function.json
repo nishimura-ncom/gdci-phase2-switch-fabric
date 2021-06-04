@@ -16,5 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/CreateCloudConnection/index.js"
+  "scriptFile": "../dist/create_juniper_cloud_connection/index.js"
 }
