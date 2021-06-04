@@ -24,7 +24,7 @@ export const getInformation = (context: Context): Promise<string> => {
     });
 };
 
-export const setSOConfiguration = (context: Context): Promise<void> => {
+export const setSOConfiguration = (context: Context): Promise<string> => {
     context.log("will set Service Order Config into juniper switch");
 
     return axios({
@@ -145,6 +145,6 @@ export const setSOConfiguration = (context: Context): Promise<void> => {
     }).then((response: AxiosResponse)  => {
         context.log("committing is success: " + response.status);
         context.log(response.data);
-        return
+        return response.data
     });
 };
